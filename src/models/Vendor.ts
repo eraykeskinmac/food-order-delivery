@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 interface VendorDoc extends Document {
   name: string;
@@ -44,6 +44,6 @@ const VendorSchema = new Schema(
   }
 );
 
-const Vendor = mongoose.model<VendorDoc>("vendor", VendorSchema);
+const Vendor = mongoose.model<VendorDoc>('vendor', VendorSchema);
 
 export { Vendor };
