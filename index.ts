@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import mongoose from 'mongoose';
-import { MONGO_URI } from './src/config/index';
+import { MONGO_URI } from './src/config';
 import { adminRoute } from './src/routes/adminRoute';
 import { vendorRoute } from './src/routes/vendorRoute';
 
@@ -14,7 +14,7 @@ app.use('/admin', adminRoute);
 app.use('/vendor', vendorRoute);
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI as string, {})
   .then(result => {
     console.log('DB Connected');
   })

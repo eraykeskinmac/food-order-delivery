@@ -1,1 +1,2 @@
-export * from "./adminController";
+export * from './adminController';
+export * from './vendorController';

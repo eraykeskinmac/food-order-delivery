@@ -1,11 +1,22 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response } from 'express';
+import { getVendorProfile, vendorLogin } from '../controllers';
+import {
+  updateVendorProfile,
+  updateVendorService,
+} from './../controllers/vendorController';
+import { Authenticate } from './../middlewares/ommonAuth';
 
 const router = express.Router();
 
-router.post('/login') // login route and last here  (8.17)
+router.post('/login', vendorLogin);
 
-router.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.json({ message: "Hello vendor" });
+router.use(Authenticate);
+router.get('/profile', Authenticate, getVendorProfile);
+router.patch('/profile', updateVendorProfile);
+router.patch('/service', updateVendorService);
+
+router.get('/', (req: Request, res: Response, next: NextFunction) => {
+  res.json({ message: 'Hello vendor' });
 });
 
 export { router as vendorRoute };
