@@ -11,21 +11,10 @@ export const FindVendor = async (id: string | undefined, email?: string) => {
   }
 };
 
-export const CreateVendor = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const {
-    name,
-    address,
-    pinCode,
-    foodType,
-    email,
-    password,
-    ownerName,
-    phone,
-  } = <CreateVendorInput>req.body;
+export const CreateVendor = async (req: Request, res: Response, next: NextFunction) => {
+  const { name, address, pinCode, foodType, email, password, ownerName, phone } = <
+    CreateVendorInput
+  >req.body;
 
   const existingVendor = await FindVendor('', email);
 
@@ -51,16 +40,13 @@ export const CreateVendor = async (
     rating: 0,
     serviceAvailability: false,
     coverImages: [],
+    foods: [],
   });
 
   return res.json(createdVendor);
 };
 
-export const GetVendors = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetVendors = async (req: Request, res: Response, next: NextFunction) => {
   const vendors = await Vendor.find({});
 
   if (vendors !== null) {
@@ -70,11 +56,7 @@ export const GetVendors = async (
   return res.json({ message: 'No vendors found' });
 };
 
-export const GetVendorByID = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetVendorByID = async (req: Request, res: Response, next: NextFunction) => {
   const vendorId = req.params.id;
 
   const vendor = await FindVendor(vendorId);
