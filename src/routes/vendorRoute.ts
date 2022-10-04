@@ -28,7 +28,7 @@ router.post('/login', vendorLogin);
 router.use(Authenticate);
 router.get('/profile', Authenticate, getVendorProfile);
 router.patch('/profile', updateVendorProfile);
-router.patch('/coverimage', images, updateVendorCoverImage);
+router.patch('/coverImage', images, updateVendorCoverImage);
 router.patch('/service', updateVendorService);
 
 router.post('/food', images, addFood);
