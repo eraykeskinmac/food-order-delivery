@@ -3,6 +3,7 @@ import express, { Application } from 'express';
 import path from 'path';
 import { adminRoute } from '../routes/adminRoute';
 import { vendorRoute } from '../routes/vendorRoute';
+import shoppingRoute from '../routes/shoppingRoute';
 
 export default async (app: Application) => {
   app.use(bodyParser.json());
@@ -11,7 +12,7 @@ export default async (app: Application) => {
 
   app.use('/admin', adminRoute);
   app.use('/vendor', vendorRoute);
-  app.use();
+  app.use(shoppingRoute);
 
   return app;
 };
