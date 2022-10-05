@@ -1,6 +1,6 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
-interface FoodDoc extends Document {
+export interface FoodDoc extends Document {
   name: string;
   description: string;
   category: string;
@@ -33,9 +33,9 @@ const foodSchema = new Schema(
     },
 
     timestamps: true,
-  }
+  },
 );
 
-const Food = mongoose.model<FoodDoc>("food", foodSchema);
+const Food = mongoose.model<FoodDoc>('food', foodSchema);
 
 export { Food };
