@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateVendorInput } from '../dto/vendor.dto';
+import { CreateVendorInput } from '../dto';
 import { Vendor } from '../models';
 import { GeneratePassword, GenerateSalt } from '../utility';
 
 export const FindVendor = async (id: string | undefined, email?: string) => {
   if (email) {
-    return await Vendor.findOne({ email: email });
+    return Vendor.findOne({ email: email });
   } else {
-    return await Vendor.findById(id);
+    return Vendor.findById(id);
   }
 };
 

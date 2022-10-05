@@ -1,22 +1,23 @@
 import express, { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
-import { getVendorProfile, vendorLogin } from '../controllers';
 import {
   addFood,
   getFoods,
+  getVendorProfile,
   updateVendorCoverImage,
   updateVendorProfile,
   updateVendorService,
-} from './../controllers/vendorController';
-import { Authenticate } from './../middlewares/ommonAuth';
+  vendorLogin,
+} from '../controllers';
+import { Authenticate } from '../middlewares';
 
 const router = express.Router();
 
 const imageStorage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, 'images');
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, new Date().toISOString() + '_' + file.originalname);
   },
 });
