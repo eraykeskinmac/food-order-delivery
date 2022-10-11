@@ -122,7 +122,26 @@ export const CustomerVerify = async (req: Request, res: Response, next: NextFunc
   return res.status(400).json({ message: 'Error with OTP Validation' });
 };
 
-export const RequestOtp = async (req: Request, res: Response, next: NextFunction) => {};
+export const RequestOtp = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
+
+  if (customer) {
+    const profile = await Customer.findById(customer._id);
+
+    if (profile) {
+      const { otp, expiry } = GenerateOtp();
+
+      profile.otp = otp;
+      profile.otp_expiry = expiry;
+
+      await profile.save();
+      await onRequestOtp(otp, profile.phone);
+
+      res.status(200).json({ message: 'OTP sent your registered phone number!' });
+    }
+  }
+  res.status(400).json({ message: 'Error with OTP Request' });
+};
 
 export const GetCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {};
 
