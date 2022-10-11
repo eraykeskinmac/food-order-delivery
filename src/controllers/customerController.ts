@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateCustomerInputs, UserLoginInputs } from '../dto/customer.dto';
+import {
+  CreateCustomerInputs,
+  EditCustomerProfileInputs,
+  UserLoginInputs,
+} from '../dto/customer.dto';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import {
@@ -143,6 +147,40 @@ export const RequestOtp = async (req: Request, res: Response, next: NextFunction
   res.status(400).json({ message: 'Error with OTP Request' });
 };
 
-export const GetCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {};
+export const GetCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
 
-export const EditCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {};
+  if (customer) {
+    const profile = await Customer.findById(customer._id);
+
+    if (profile) {
+      return res.status(200).json(profile);
+    }
+  }
+  return res.status(400).json({ message: 'Error with Fetch Profile' });
+};
+
+export const EditCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
+  const profileInputs = plainToClass(EditCustomerProfileInputs, req.body);
+  const profileErrors = await validate(profileInputs, { validationError: { target: false } });
+
+  if (profileErrors.length > 0) {
+    return res.status(400).json(profileErrors);
+  }
+
+  const { firstName, lastName, address } = profileInputs;
+
+  if (customer) {
+    const profile = await Customer.findById(customer._id);
+
+    if (profile) {
+      profile.firstName;
+      profile.lastName;
+      profile.address;
+
+      const result = await profile.save();
+      res.status(200).json(result);
+    }
+  }
+};
