@@ -1,1 +1,2 @@
-export * from "./passwordUtility";
+export * from './passwordUtility';
+export * from './notificationUtility';
