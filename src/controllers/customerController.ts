@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateCustomerInputs } from '../dto/customer.dto';
+import { CreateCustomerInputs, UserLoginInputs } from '../dto/customer.dto';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import {
@@ -8,6 +8,7 @@ import {
   GenerateSalt,
   GenerateSignature,
   onRequestOtp,
+  ValidatePassword,
 } from '../utility';
 import { Customer } from '../models';
 
@@ -63,7 +64,34 @@ export const CustomerSignUp = async (req: Request, res: Response, next: NextFunc
   return res.status(400).json({ message: 'Error with Signup' });
 };
 
-export const CustomerLogin = async (req: Request, res: Response, next: NextFunction) => {};
+export const CustomerLogin = async (req: Request, res: Response, next: NextFunction) => {
+  const loginInputs = plainToClass(UserLoginInputs, req.body);
+
+  const loginErrors = await validate(loginInputs, { validationError: { target: true } });
+
+  if (loginErrors.length > 0) {
+    return res.status(400).json(loginErrors);
+  }
+  const { email, password } = loginInputs;
+  const customer = await Customer.findOne({ email: email });
+
+  if (customer) {
+    const validation = await ValidatePassword(password, customer.password, customer.salt);
+
+    if (validation) {
+      const signature = GenerateSignature({
+        _id: customer._id,
+        email: customer.email,
+        verified: customer.verified,
+      });
+
+      return res
+        .status(201)
+        .json({ signature: signature, verified: customer.verified, email: customer.email });
+    }
+  }
+  return res.status(404).json({ message: 'Error with Login' });
+};
 
 export const CustomerVerify = async (req: Request, res: Response, next: NextFunction) => {
   const { otp } = req.body;
