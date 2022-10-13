@@ -1,0 +1,70 @@
+Arguments: 
+  /usr/local/bin/node /opt/homebrew/bin/yarn
+
+PATH: 
+  /Users/eraykeskin/.bun/bin:/Users/eraykeskin/.bun/bin:/Users/eraykeskin/.cargo/bin:/Users/eraykeskin/go/bin:/Users/eraykeskin/.krew/bin:/opt/homebrew/opt/openjdk/bin:/opt/homebrew/opt/openssl/bin:/opt/homebrew/opt/gettext/bin:/opt/homebrew/opt/gnu-time/libexec/gnubin:/opt/homebrew/opt/grep/libexec/gnubin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/gnu-tar/libexec/gnubin:/opt/homebrew/opt/gnu-indent/libexec/gnubin:/opt/homebrew/opt/gnu-getopt/bin:/opt/homebrew/opt/coreutils/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/eraykeskin/Library/Application Support/JetBrains/Toolbox/scripts
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  16.17.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  SyntaxError: /Users/eraykeskin/Desktop/Workout/food_order_backend/package.json: Unexpected token } in JSON at position 921
+      at JSON.parse (<anonymous>)
+      at /opt/homebrew/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /opt/homebrew/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "food_order_backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "dev": "nodemon index.ts",
+      "start": "node dist/index.js",
+      "build": "tsc -p .",
+      "postinstall": "npm run build"
+    },
+    "engines": {
+      "node": "14.15.2",
+      "npm": "6.14.9"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "@types/bcrypt": "^5.0.0",
+      "@types/cors": "^2.8.12",
+      "@types/express": "^4.17.14",
+      "@types/jsonwebtoken": "^8.5.9",
+      "@types/multer": "^1.4.7",
+      "nodemon": "^2.0.20",
+      "ts-node-dev": "^2.0.0",
+      "typescript": "^4.8.3"
+    },
+    "dependencies": {
+      "bcrypt": "^5.0.1",
+      "body-parser": "^1.20.0",
+      "class-transformer": "^0.5.1",
+      "class-validator": "^0.13.2",
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.2",
+      "express": "^4.18.1",
+      "jsonwebtoken": "^8.5.1",
+      "mongoose": "^6.6.1",
+      "multer": "^1.4.5-lts.1",
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
