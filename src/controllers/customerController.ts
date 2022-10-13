@@ -8,6 +8,7 @@ import {
   UserLoginInputs,
 } from '../dto/customer.dto';
 import { Customer, Food } from '../models';
+import { Order } from '../models/Order';
 import {
   GenerateOtp,
   GeneratePassword,
@@ -51,6 +52,7 @@ export const CustomerSignUp = async (req: Request, res: Response, next: NextFunc
     verified: false,
     lat: 0,
     lng: 0,
+    orders: [],
   });
 
   if (result) {
@@ -215,11 +217,44 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
     });
 
     if (cartItem) {
-        
+      const currentOrder = await Order.create({
+        orderId: orderId,
+        items: cartItem,
+        totalAmount: netAmount,
+        orderDate: new Date(),
+        paidThrough: 'CDD',
+        paymentResponse: '',
+        orderStatus: 'Waiting',
+      });
+
+      if (currentOrder) {
+        profile.orders.push(currentOrder);
+        await profile.save();
+
+        return res.status(200).json(currentOrder);
+      }
+    }
+  }
+  return res.status(400).json({ message: 'Error with Create Order' });
+};
+
+export const GetOrders = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
+
+  if (customer) {
+    const profile = await Customer.findById(customer._id).populate('orders');
+
+    if (profile) {
+      return res.status(200).json(profile.orders);
     }
   }
 };
 
-export const GetOrders = async (req: Request, res: Response, next: NextFunction) => {};
+export const GetOrderById = async (req: Request, res: Response, next: NextFunction) => {
+  const orderId = req.params.id;
 
-export const GetOrderById = async (req: Request, res: Response, next: NextFunction) => {};
+  if (orderId) {
+    const order = await Order.findById(orderId).populate('items.food');
+    res.status(200).json(order);
+  }
+};
