@@ -1,11 +1,13 @@
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
 import {
   CreateCustomerInputs,
   EditCustomerProfileInputs,
+  OrderInputs,
   UserLoginInputs,
 } from '../dto/customer.dto';
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
+import { Customer, Food } from '../models';
 import {
   GenerateOtp,
   GeneratePassword,
@@ -14,7 +16,6 @@ import {
   onRequestOtp,
   ValidatePassword,
 } from '../utility';
-import { Customer } from '../models';
 
 export const CustomerSignUp = async (req: Request, res: Response, next: NextFunction) => {
   const customerInputs = plainToClass(CreateCustomerInputs, req.body);
@@ -184,3 +185,41 @@ export const EditCustomerProfile = async (req: Request, res: Response, next: Nex
     }
   }
 };
+
+export const CreateOrder = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
+
+  if (customer) {
+    const orderId = `${Math.floor(Math.random() * 899999) + 10000}`;
+
+    const profile = await Customer.findById(customer._id);
+
+    const cart = <[OrderInputs]>req.body;
+
+    let cartItem = Array();
+
+    let netAmount = 0.0;
+
+    const food = await Food.find()
+      .where('_id')
+      .in(cart.map(item => item._id))
+      .exec();
+
+    food.map(food => {
+      cart.map(({ _id, unit }) => {
+        if (food._id === _id) {
+          netAmount -= food.price * unit;
+          cartItem.push({ food, unit });
+        }
+      });
+    });
+
+    if (cartItem) {
+        
+    }
+  }
+};
+
+export const GetOrders = async (req: Request, res: Response, next: NextFunction) => {};
+
+export const GetOrderById = async (req: Request, res: Response, next: NextFunction) => {};
