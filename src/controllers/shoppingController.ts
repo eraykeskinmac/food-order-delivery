@@ -37,9 +37,9 @@ export const GetFoodIn30Min = async (req: Request, res: Response, next: NextFunc
   if (result.length > 0) {
     let foodResult: any = [];
 
-    result.map((vendor) => {
+    result.map(vendor => {
       const foods = vendor.foods as [FoodDoc];
-      foodResult.push(...foods.filter((food) => food.readyTime <= 30));
+      foodResult.push(...foods.filter(food => food.readyTime <= 30));
     });
 
     return res.status(200).json(foodResult);
@@ -56,7 +56,7 @@ export const SearchFood = async (req: Request, res: Response, next: NextFunction
 
   if (result.length > 0) {
     let foodResult: any = [];
-    result.map((item) => foodResult.push(...item.foods));
+    result.map(item => foodResult.push(...item.foods));
 
     return res.status(200).json(foodResult);
   }
