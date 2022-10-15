@@ -232,7 +232,17 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
   return res.status(400).json({ message: 'Unable to create Cart!' });
 };
 
-export const GetCart = async (req: Request, res: Response, next: NextFunction) => {};
+export const GetCart = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
+  if (customer) {
+    const profile = await (await Customer.findById(customer._id)).populated('cart.food');
+    if (profile) {
+      return res.status(200).json(profile.cart);
+    }
+  }
+
+  return res.status(400).json({ message: 'Cart is empty' });
+};
 
 export const DeleteCart = async (req: Request, res: Response, next: NextFunction) => {};
 
