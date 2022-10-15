@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
+import { EditVendorInputs, VendorLoginInputs } from '../dto';
+import { CreateFoodInputs } from '../dto/food.dto';
 import { Food } from '../models/Food';
 import { GenerateSignature, ValidatePassword } from '../utility';
 import { FindVendor } from './adminController';
-import { CreateFoodInputs } from '../dto/food.dto';
-import { EditVendorInputs, VendorLoginInputs } from '../dto';
 
 export const vendorLogin = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = <VendorLoginInputs>req.body;
@@ -146,3 +146,9 @@ export const getFoods = async (req: Request, res: Response, next: NextFunction) 
 
   return res.json({ message: 'Foods information not found' });
 };
+
+export const GetCurrentOrders = async (req: Request, res: Response, next: NextFunction) => {};
+
+export const GetOrderDetails = async (req: Request, res: Response, next: NextFunction) => {};
+
+export const ProcessOrder = async (req: Request, res: Response, next: NextFunction) => {};

@@ -3,7 +3,10 @@ import multer from 'multer';
 import {
   addFood,
   getFoods,
+  GetOrderDetails,
+  GetOrders,
   getVendorProfile,
+  ProcessOrder,
   updateVendorCoverImage,
   updateVendorProfile,
   updateVendorService,
@@ -14,10 +17,10 @@ import { Authenticate } from '../middlewares';
 const router = express.Router();
 
 const imageStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function(req, file, cb) {
     cb(null, 'images');
   },
-  filename: function (req, file, cb) {
+  filename: function(req, file, cb) {
     cb(null, new Date().toISOString() + '_' + file.originalname);
   },
 });
@@ -34,6 +37,10 @@ router.patch('/service', updateVendorService);
 
 router.post('/food', images, addFood);
 router.get('/foods', getFoods);
+
+router.get('/orders', GetOrders);
+router.get('/order/:id/process', ProcessOrder);
+router.get('/order/:id', GetOrderDetails);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.json({ message: 'Hello vendor' });
