@@ -235,7 +235,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
 export const GetCart = async (req: Request, res: Response, next: NextFunction) => {
   const customer = req.user;
   if (customer) {
-    const profile = await (await Customer.findById(customer._id)).populated('cart.food');
+    const profile = await (await Customer.findById(customer._id)).populate('cart.food');
     if (profile) {
       return res.status(200).json(profile.cart);
     }
@@ -247,7 +247,7 @@ export const GetCart = async (req: Request, res: Response, next: NextFunction) =
 export const DeleteCart = async (req: Request, res: Response, next: NextFunction) => {
   const customer = req.user;
   if (customer) {
-    const profile = await (await Customer.findById(customer._id)).populated('cart.food');
+    const profile = await (await Customer.findById(customer._id)).populate('cart.food');
     if (profile != null) {
       profile.cart = [] as any;
       const cartResult = await profile.save();
