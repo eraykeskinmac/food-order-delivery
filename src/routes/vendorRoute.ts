@@ -2,7 +2,10 @@ import express, { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
 import {
   addFood,
+  AddOffer,
+  EditOffer,
   getFoods,
+  GetOffers,
   GetOrderDetails,
   GetOrders,
   getVendorProfile,
@@ -41,6 +44,10 @@ router.get('/foods', getFoods);
 router.get('/orders', GetOrders);
 router.put('/order/:id/process', ProcessOrder);
 router.get('/order/:id', GetOrderDetails);
+
+router.get('/offers', GetOffers);
+router.post('/offer', AddOffer);
+router.put('/offer/:id', EditOffer);
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.json({ message: 'Hello vendor' });
