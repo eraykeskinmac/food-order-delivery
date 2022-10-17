@@ -197,7 +197,30 @@ export const ProcessOrder = async (req: Request, res: Response, next: NextFuncti
   return res.json({ message: 'Unable the process Order' });
 };
 
-export const GetOffers = async (req: Request, res: Response, next: NextFunction) => {};
+export const GetOffers = async (req: Request, res: Response, next: NextFunction) => {
+  const user = req.user;
+  if (user) {
+    let currentOffers = Array();
+
+    const offers = await Offer.find().populate('vendors');
+    if (offers) {
+      offers.map(item => {
+        if (item.vendors) {
+          item.vendors.map(vendor => {
+            if (vendor._id.toString() === user._id) {
+              currentOffers.push(item);
+            }
+          });
+        }
+        if (item.offerType === 'GENERIC') {
+          currentOffers.push(item);
+        }
+      });
+    }
+    return res.json(currentOffers);
+  }
+  return res.json({ message: 'Unable the Get Offers!' });
+};
 
 export const AddOffer = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
@@ -243,4 +266,6 @@ export const AddOffer = async (req: Request, res: Response, next: NextFunction) 
   return res.json({ message: 'Unable to Add Offer!!!' });
 };
 
-export const EditOffer = async (req: Request, res: Response, next: NextFunction) => {};
+export const EditOffer = async (req: Request, res: Response, next: NextFunction) => {
+  
+};
