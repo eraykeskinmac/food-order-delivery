@@ -17,6 +17,7 @@ import {
   onRequestOtp,
   ValidatePassword,
 } from '../utility';
+import { Transaction } from './../models/Transaction';
 
 export const CustomerSignUp = async (req: Request, res: Response, next: NextFunction) => {
   const customerInputs = plainToClass(CreateCustomerInputs, req.body);
@@ -354,4 +355,31 @@ export const VerifyOffer = async (req: Request, res: Response, next: NextFunctio
     }
   }
   return res.status(400).json({ message: 'Offer is not valid!' });
+};
+
+export const CreatePayment = async (req: Request, res: Response, next: NextFunction) => {
+  const customer = req.user;
+  const { amount, paymentMode, offerId } = req.body;
+  let payableAmount = Number(amount);
+
+  if (offerId) {
+    const appliedOffer = await Offer.findById(offerId);
+
+    if (appliedOffer) {
+      if (appliedOffer.isActive) {
+        payableAmount = payableAmount - appliedOffer.offerAmount;
+      }
+    }
+  }
+  const transaction = await Transaction.create({
+    customer: customer._id,
+    vendorId: '',
+    orderId: '',
+    orderValue: payableAmount,
+    offerUsed: offerId || 'NA',
+    status: 'OPEN',
+    paymentMode: paymentMode,
+    paymentResponse: 'Payment is Cash on Delivery',
+  });
+  return res.status(200).json(transaction);
 };
