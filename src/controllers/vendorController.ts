@@ -90,11 +90,16 @@ export const updateVendorCoverImage = async (req: Request, res: Response, next: 
 
 export const updateVendorService = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
+  const { lat, lng } = req.body;
 
   if (user) {
     const existingVendor = await FindVendor(user._id);
     if (existingVendor !== null) {
       existingVendor.serviceAvailability = !existingVendor.serviceAvailability;
+      if (lat && lng) {
+        existingVendor.lat = lat;
+        existingVendor.lng = lng;
+      }
       const savedResults = await existingVendor.save();
       return res.json(savedResults);
     }
