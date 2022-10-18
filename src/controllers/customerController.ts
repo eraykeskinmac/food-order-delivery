@@ -2,6 +2,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
 import {
+  CartItem,
   CreateCustomerInputs,
   EditCustomerProfileInputs,
   OrderInputs,
@@ -196,7 +197,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
     const profile = await Customer.findById(customer._id).populate('cart.food');
     let cartItems = Array();
 
-    const { _id, unit } = <OrderInputs>req.body;
+    const { _id, unit } = <CartItem>req.body;
 
     const food = await Food.findById(_id);
 
@@ -258,15 +259,29 @@ export const DeleteCart = async (req: Request, res: Response, next: NextFunction
   return res.status(400).json({ message: 'cart is already empty' });
 };
 
+const validateTransaction = async (txnId: string) => {
+  const currentTransaction = await Transaction.findById(txnId);
+  if (currentTransaction) {
+    if (currentTransaction.status.toLowerCase() !== 'failed') {
+      return { status: true, currentTransaction };
+    }
+  }
+  return { status: false, currentTransaction };
+};
+
 export const CreateOrder = async (req: Request, res: Response, next: NextFunction) => {
   const customer = req.user;
+  const { txnId, amount, items } = <OrderInputs>req.body;
 
   if (customer) {
+    const { status, currentTransaction } = await validateTransaction(txnId);
+    if (!status) {
+      return res.status(404).json({ message: 'Error with Create Order!' });
+    }
+
     const orderId = `${Math.floor(Math.random() * 899999) + 10000}`;
 
     const profile = await Customer.findById(customer._id);
-
-    const cart = <[OrderInputs]>req.body;
 
     let cartItem = Array();
     let netAmount = 0.0;
@@ -274,11 +289,11 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
     const food = await Food.find()
       .where('_id')
-      .in(cart.map(item => item._id))
+      .in(items.map(item => item._id))
       .exec();
 
     food.map(food => {
-      cart.map(({ _id, unit }) => {
+      items.map(({ _id, unit }) => {
         if (food._id === _id) {
           vendorId = food.vendorId;
           netAmount -= food.price * unit;
@@ -293,24 +308,25 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
         vendorId: vendorId,
         items: cartItem,
         totalAmount: netAmount,
+        paidAmount: amount,
         orderDate: new Date(),
-        paidThrough: 'CDD',
-        paymentResponse: '',
         orderStatus: 'Waiting',
         remarks: '',
         deliveryId: '',
-        appliedOffers: false,
-        offerId: null,
         readyTime: 45,
       });
 
-      if (currentOrder) {
-        profile.cart = [] as any;
-        profile.orders.push(currentOrder);
-        await profile.save();
+      profile.cart = [] as any;
+      profile.orders.push(currentOrder);
 
-        return res.status(200).json(currentOrder);
-      }
+      currentTransaction.vendorId = vendorId;
+      currentTransaction.orderId = orderId;
+      currentTransaction.status = 'CONFIRMED';
+      await currentTransaction.save();
+
+      const profileSaveResponse = await profile.save();
+
+      return res.status(200).json(profileSaveResponse);
     }
   }
   return res.status(400).json({ message: 'Error with Create Order' });
