@@ -7,7 +7,7 @@ import {
   OrderInputs,
   UserLoginInputs,
 } from '../dto/customer.dto';
-import { Customer, Food } from '../models';
+import { Customer, Food, Offer } from '../models';
 import { Order } from '../models/Order';
 import {
   GenerateOtp,
@@ -334,4 +334,24 @@ export const GetOrderById = async (req: Request, res: Response, next: NextFuncti
     const order = await Order.findById(orderId).populate('items.food');
     res.status(200).json(order);
   }
+};
+
+export const VerifyOffer = async (req: Request, res: Response, next: NextFunction) => {
+  const offerId = req.params.id;
+  const customer = req.user;
+
+  if (customer) {
+    const appliedOffer = await Offer.findById(offerId);
+
+    if (appliedOffer) {
+      if (appliedOffer.promoType === 'USER') {
+        // only can apply once per user
+      } else {
+        if (appliedOffer.isActive) {
+          return res.status(200).json({ message: 'Offer is Valid', offer: appliedOffer });
+        }
+      }
+    }
+  }
+  return res.status(400).json({ message: 'Offer is not valid!' });
 };
