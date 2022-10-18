@@ -259,6 +259,13 @@ export const DeleteCart = async (req: Request, res: Response, next: NextFunction
   return res.status(400).json({ message: 'cart is already empty' });
 };
 
+const assignOrderForDelivery = async (orderId: string, vendorId: string) => {
+  // find  the vendor
+  // find the avaiable Delivery person
+  //  check the nearest delivery person assign the order
+  // update deliveryID
+};
+
 const validateTransaction = async (txnId: string) => {
   const currentTransaction = await Transaction.findById(txnId);
   if (currentTransaction) {
@@ -323,6 +330,8 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
       currentTransaction.orderId = orderId;
       currentTransaction.status = 'CONFIRMED';
       await currentTransaction.save();
+
+      assignOrderForDelivery(currentOrder._id, vendorId);
 
       const profileSaveResponse = await profile.save();
 
