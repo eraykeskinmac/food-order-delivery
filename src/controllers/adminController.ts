@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { CreateVendorInput } from '../dto';
-import { Transaction, Vendor } from '../models';
+import { DeliveryUser, Transaction, Vendor } from '../models';
 import { GeneratePassword, GenerateSalt } from '../utility';
 
 export const FindVendor = async (id: string | undefined, email?: string) => {
@@ -85,4 +85,28 @@ export const GetTransactionById = async (req: Request, res: Response, next: Next
     return res.status(200).json(transaction);
   }
   return res.json({ message: 'Transaction not available' });
+};
+
+export const VerifyDeliveryUser = async (req: Request, res: Response, next: NextFunction) => {
+  const { _id, status } = req.body;
+
+  if (_id) {
+    const profile = await DeliveryUser.findById(_id);
+    if (profile) {
+      profile.verified = status;
+
+      const result = await profile.save();
+      return res.status(200).json(result);
+    }
+  }
+  return res.status(400).json({ message: 'Unable to verify Delivery User' });
+};
+
+export const GetDeliveryUsers = async (req: Request, res: Response, next: NextFunction) => {
+  const deliveryUsers = await DeliveryUser.find();
+  if (deliveryUsers) {
+    return res.status(200).json(deliveryUsers);
+  }
+
+  return res.status(400).json({ message: 'Unable to Get Delivery Users' });
 };
