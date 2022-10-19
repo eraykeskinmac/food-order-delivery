@@ -8,7 +8,7 @@ import {
   OrderInputs,
   UserLoginInputs,
 } from '../dto/customer.dto';
-import { Customer, Food, Offer } from '../models';
+import { Customer, Food, Offer, Vendor } from '../models';
 import { Order } from '../models/Order';
 import {
   GenerateOtp,
@@ -261,8 +261,15 @@ export const DeleteCart = async (req: Request, res: Response, next: NextFunction
 
 const assignOrderForDelivery = async (orderId: string, vendorId: string) => {
   // find  the vendor
-  // find the avaiable Delivery person
-  //  check the nearest delivery person assign the order
+  const vendor = await Vendor.findById(vendorId);
+  if (vendor) {
+    const areaCode = vendor.pinCode;
+    const vendorLat = vendor.lat;
+    const vendorLng = vendor.lng;
+    // find the avaiable Delivery person
+    
+    //  check the nearest delivery person assign the order
+  }
   // update deliveryID
 };
 
