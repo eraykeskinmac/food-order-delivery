@@ -209,9 +209,9 @@ export const GetOffers = async (req: Request, res: Response, next: NextFunction)
 
     const offers = await Offer.find().populate('vendors');
     if (offers) {
-      offers.map(item => {
+      offers.map((item) => {
         if (item.vendors) {
-          item.vendors.map(vendor => {
+          item.vendors.map((vendor) => {
             if (vendor._id.toString() === user._id) {
               currentOffers.push(item);
             }
