@@ -195,7 +195,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
 
   if (customer) {
     const profile = await Customer.findById(customer._id).populate('cart.food');
-    let cartItems = Array();
+    let cartItems = [];
 
     const { _id, unit } = <CartItem>req.body;
 
@@ -305,7 +305,7 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
     const profile = await Customer.findById(customer._id);
 
-    let cartItem = Array();
+    let cartItem = [];
     let netAmount = 0.0;
     let vendorId;
 
