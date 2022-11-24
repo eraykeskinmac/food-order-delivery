@@ -195,7 +195,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
 
   if (customer) {
     const profile = await Customer.findById(customer._id).populate('cart.food');
-    let cartItems = Array();
+    let cartItems = [];
 
     const { _id, unit } = <CartItem>req.body;
 
@@ -208,7 +208,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
 
         if (cartItems.length > 0) {
           // check  and update unit
-          let existFoodItem = cartItems.filter(item => item.food._id.toString() === _id);
+          let existFoodItem = cartItems.filter((item) => item.food._id.toString() === _id);
           if (existFoodItem.length > 0) {
             const index = cartItems.indexOf(existFoodItem[0]);
             if (unit > 0) {
@@ -305,16 +305,16 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
     const profile = await Customer.findById(customer._id);
 
-    let cartItem = Array();
+    let cartItem = [];
     let netAmount = 0.0;
     let vendorId;
 
     const food = await Food.find()
       .where('_id')
-      .in(items.map(item => item._id))
+      .in(items.map((item) => item._id))
       .exec();
 
-    food.map(food => {
+    food.map((food) => {
       items.map(({ _id, unit }) => {
         if (food._id === _id) {
           vendorId = food.vendorId;
