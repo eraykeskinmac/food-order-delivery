@@ -202,13 +202,13 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
     const food = await Food.findById(_id);
 
     if (food) {
-      if (profile != null) {
+      if (profile !== null) {
         //check for cart items
         cartItems = profile.cart;
 
         if (cartItems.length > 0) {
           // check  and update unit
-          let existFoodItem = cartItems.filter((item) => item.food._id.toString() === _id);
+          let existFoodItem = cartItems.filter(item => item.food._id.toString() === _id);
           if (existFoodItem.length > 0) {
             const index = cartItems.indexOf(existFoodItem[0]);
             if (unit > 0) {
@@ -250,7 +250,7 @@ export const DeleteCart = async (req: Request, res: Response, next: NextFunction
   const customer = req.user;
   if (customer) {
     const profile = await (await Customer.findById(customer._id)).populate('cart.food');
-    if (profile != null) {
+    if (profile !== null) {
       profile.cart = [] as any;
       const cartResult = await profile.save();
       return res.status(200).json(profile.cart);
@@ -311,10 +311,10 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
     const food = await Food.find()
       .where('_id')
-      .in(items.map((item) => item._id))
+      .in(items.map(item => item._id))
       .exec();
 
-    food.map((food) => {
+    food.map(food => {
       items.map(({ _id, unit }) => {
         if (food._id === _id) {
           vendorId = food.vendorId;

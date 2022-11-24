@@ -160,7 +160,7 @@ export const GetCurrentOrders = async (req: Request, res: Response, next: NextFu
 
   if (user) {
     const orders = await Order.find({ vendorId: user._id }).populate('items.food');
-    if (orders != null) {
+    if (orders !== null) {
       return res.status(200).json(orders);
     }
   }
@@ -173,7 +173,7 @@ export const GetOrderDetails = async (req: Request, res: Response, next: NextFun
 
   if (orderId) {
     const order = await Order.findById({ orderId }).populate('items.food');
-    if (order != null) {
+    if (order !== null) {
       return res.status(200).json(order);
     }
   }
@@ -209,9 +209,9 @@ export const GetOffers = async (req: Request, res: Response, next: NextFunction)
 
     const offers = await Offer.find().populate('vendors');
     if (offers) {
-      offers.map((item) => {
+      offers.map(item => {
         if (item.vendors) {
-          item.vendors.map((vendor) => {
+          item.vendors.map(vendor => {
             if (vendor._id.toString() === user._id) {
               currentOffers.push(item);
             }
