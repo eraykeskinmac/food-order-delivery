@@ -68,6 +68,6 @@ export class CreateDeliveryUserInputs {
   @Length(6, 24)
   address: string;
 
-  @Length(4,12)
-  pincode: string
+  @Length(4, 12)
+  pincode: string;
 }

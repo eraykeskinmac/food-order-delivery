@@ -12,4 +12,4 @@ const startServer = async () => {
     console.log(`Listening to port ${PORT}`);
   });
 };
-startServer().then(r => r);
+startServer().then((r) => r);
