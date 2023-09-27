@@ -23,7 +23,6 @@
 
 ## 📖 Table of Contents
 - [📖 Table of Contents](#-table-of-contents)
-- [📍 Overview](#-overview)
 - [📦 Features](#-features)
 - [📂 Repository Structure](#-repository-structure)
 - [⚙️ Modules](#modules)
@@ -210,16 +209,6 @@
 ---
 
 ## 🚀 Getting Started
-
-***Dependencies***
-
-Please ensure you have the following dependencies installed on your system:
-
-`- ℹ️ Dependency 1`
-
-`- ℹ️ Dependency 2`
-
-`- ℹ️ ...`
 
 ### 🔧 Installation
 
