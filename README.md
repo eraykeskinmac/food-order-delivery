@@ -262,15 +262,3 @@ git push origin new-feature-branch
 The project maintainers will review your changes and provide feedback or merge them into the main branch.
 
 ---
-
-## 📄 License
-
-This project is licensed under the `ℹ️  LICENSE-TYPE` License. See the [LICENSE-Type](LICENSE) file for additional info.
-
----
-
-## 👏 Acknowledgments
-
-`- ℹ️ List any resources, contributors, inspiration, etc.`
-
----
